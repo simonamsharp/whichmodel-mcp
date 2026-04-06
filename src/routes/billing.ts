@@ -8,10 +8,12 @@
  *
  *  POST /billing/webhook
  *    Stripe webhook receiver.  Verifies the Stripe-Signature header and handles:
- *      - customer.subscription.created  → upgrade plan + limit
- *      - customer.subscription.updated  → update plan + limit (handles upgrades/downgrades)
- *      - customer.subscription.deleted  → downgrade to free
- *      - invoice.payment_failed         → log (no immediate action; Stripe retries)
+ *      - customer.subscription.created         → upgrade plan + limit
+ *      - customer.subscription.updated         → update plan + limit (upgrades/downgrades/SCA activation)
+ *      - customer.subscription.deleted         → downgrade to free
+ *      - invoice.paid                          → log successful payment (future: send receipt)
+ *      - invoice.payment_failed                → log (no immediate action; Stripe retries)
+ *      - invoice.payment_action_required       → log 3DS/SCA required action (future: email customer)
  *
  *  GET /billing/portal
  *    Requires: Authorization: Bearer <api_key>
@@ -296,11 +298,58 @@ export async function handleWebhook(request: Request, env: BillingEnv): Promise<
       break;
     }
 
+    case 'invoice.paid': {
+      // Fires on every successful payment (initial subscription + all renewals).
+      // Currently used for audit logging. TODO: send receipt email via Resend.
+      const invoice = event.data.object as {
+        customer: string;
+        subscription: string;
+        customer_email: string | null;
+        amount_paid: number;
+        currency: string;
+      };
+      console.log(
+        '[webhook] invoice paid — customer:', invoice.customer,
+        'sub:', invoice.subscription,
+        'amount:', invoice.amount_paid, invoice.currency,
+      );
+      break;
+    }
+
     case 'invoice.payment_failed': {
-      const invoice = event.data.object as { customer: string; subscription: string };
-      console.warn('[webhook] payment failed for customer:', invoice.customer, 'sub:', invoice.subscription);
-      // Stripe retries automatically. We don't revoke the key immediately.
-      // TODO: send payment-failed email via Resend after N failures.
+      const invoice = event.data.object as {
+        customer: string;
+        subscription: string;
+        customer_email: string | null;
+        attempt_count: number;
+      };
+      console.warn(
+        '[webhook] payment failed — customer:', invoice.customer,
+        'sub:', invoice.subscription,
+        'attempt:', invoice.attempt_count,
+      );
+      // Stripe retries automatically per the subscription's retry schedule.
+      // TODO: send payment-failed email via Resend when attempt_count >= 2.
+      break;
+    }
+
+    case 'invoice.payment_action_required': {
+      // Fires when a payment requires 3D Secure / SCA authentication.
+      // The subscription will be in 'incomplete' status until the customer completes auth.
+      // The subscription.updated event will fire and activate the plan once auth succeeds.
+      const invoice = event.data.object as {
+        customer: string;
+        subscription: string;
+        customer_email: string | null;
+        hosted_invoice_url: string | null;
+      };
+      console.warn(
+        '[webhook] payment action required (3DS) — customer:', invoice.customer,
+        'sub:', invoice.subscription,
+        'invoice_url:', invoice.hosted_invoice_url,
+      );
+      // TODO: email customer via Resend with invoice.hosted_invoice_url so they can
+      // complete 3DS authentication. Without this, European SCA payments silently fail.
       break;
     }
 

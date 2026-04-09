@@ -1,0 +1,137 @@
+{
+  "$schema": "https://chat-plugins.lobehub.com/schema/lobeChatPlugin.json",
+  "api": [
+    {
+      "url": "https://whichmodel.dev/mcp",
+      "name": "recommend_model",
+      "description": "Get the best AI model recommendation for a specific task. Returns ranked models based on quality, speed, or cost optimization with real-time pricing data updated every 4 hours.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "The task type: coding, summarization, creative_writing, data_analysis, math, translation, etc."
+          },
+          "optimize_for": {
+            "type": "string",
+            "enum": ["quality", "speed", "cost"],
+            "default": "quality",
+            "description": "Optimization preference"
+          },
+          "max_results": {
+            "type": "number",
+            "default": 5,
+            "description": "Number of recommendations to return"
+          }
+        },
+        "required": ["task"]
+      }
+    },
+    {
+      "url": "https://whichmodel.dev/mcp",
+      "name": "compare_models",
+      "description": "Side-by-side comparison of specific AI models across pricing, capabilities, speed, and quality metrics.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "models": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "List of model identifiers to compare (e.g., ['gpt-4o', 'claude-sonnet-4-20250514'])"
+          }
+        },
+        "required": ["models"]
+      }
+    },
+    {
+      "url": "https://whichmodel.dev/mcp",
+      "name": "get_pricing",
+      "description": "Get real-time pricing for AI models across 30+ providers. Cross-verified every 4 hours against provider APIs.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model identifier (e.g., 'gpt-4o', 'claude-sonnet-4-20250514')"
+          },
+          "provider": {
+            "type": "string",
+            "description": "Optional: filter by provider (e.g., 'openai', 'anthropic', 'google')"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "url": "https://whichmodel.dev/mcp",
+      "name": "estimate_cost",
+      "description": "Estimate the cost of an AI model call based on input/output token counts.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model identifier"
+          },
+          "input_tokens": {
+            "type": "number",
+            "description": "Number of input tokens"
+          },
+          "output_tokens": {
+            "type": "number",
+            "description": "Number of output tokens"
+          }
+        },
+        "required": ["model", "input_tokens", "output_tokens"]
+      }
+    },
+    {
+      "url": "https://whichmodel.dev/mcp",
+      "name": "find_cheapest_capable",
+      "description": "Find the cheapest AI model that meets minimum capability requirements for a given task.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Task type to find capable models for"
+          },
+          "min_quality": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "default": "medium",
+            "description": "Minimum quality threshold"
+          }
+        },
+        "required": ["task"]
+      }
+    },
+    {
+      "url": "https://whichmodel.dev/mcp",
+      "name": "check_price_changes",
+      "description": "Check recent pricing changes across AI models. Useful for monitoring cost trends and catching price drops.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "hours": {
+            "type": "number",
+            "default": 24,
+            "description": "How many hours back to check for changes"
+          }
+        },
+        "required": []
+      }
+    }
+  ],
+  "author": "Which-Model",
+  "createAt": "2026-04-09",
+  "homepage": "https://github.com/Which-Model/whichmodel-mcp",
+  "identifier": "whichmodel-mcp",
+  "meta": {
+    "avatar": "💰",
+    "tags": ["ai", "pricing", "models", "mcp", "cost-optimization", "llm"],
+    "title": "WhichModel",
+    "description": "Real-time AI model pricing and recommendations. Find the best model for any task at the best price, with cross-verified data updated every 4 hours."
+  },
+  "schemaVersion": 1
+}

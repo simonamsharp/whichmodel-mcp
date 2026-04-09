@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Which-Model/whichmodel",
+  "description": "Cost-optimized LLM model routing recommendations for autonomous AI agents",
+  "title": "WhichModel",
+  "websiteUrl": "https://whichmodel.dev",
+  "repository": {
+    "url": "https://github.com/Which-Model/whichmodel-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://whichmodel.dev/mcp"
+    }
+  ]
+}

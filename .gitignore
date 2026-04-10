@@ -8,3 +8,6 @@ dist-worker/
 .DS_Store
 coverage/
 .wrangler/
+.smithery/
+.mcpregistry_github_token
+.mcpregistry_registry_token

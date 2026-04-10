@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "whichmodel": {
+      "url": "https://mcp.whichmodel.dev/sse"
+    }
+  }
+}

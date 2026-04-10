@@ -1,0 +1,12 @@
+{
+  "name": "whichmodel",
+  "version": "1.0.0",
+  "description": "MCP server that helps developers pick the best AI model for any task — by cost, speed, and capability.",
+  "author": {
+    "name": "Which-Model",
+    "url": "https://whichmodel.dev"
+  },
+  "repository": "https://github.com/Which-Model/whichmodel-mcp",
+  "license": "MIT",
+  "keywords": ["mcp", "ai", "models", "llm", "comparison"]
+}

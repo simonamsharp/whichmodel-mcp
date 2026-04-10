@@ -52,7 +52,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/simonamsharp/routewise-mcp.git"
+    "url": "git+https://github.com/Which-Model/whichmodel-mcp.git"
   },
   "engines": {
     "node": ">=20.0.0"

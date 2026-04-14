@@ -1,5 +1,5 @@
 /**
- * WhichModel landing page — served at whichmodel.dev root.
+ * WhichModel MCP landing page — served at mcp.whichmodel.dev root.
  *
  * Self-contained HTML/CSS/JS template literal.
  * The sign-up form posts to POST /auth/signup and displays
